@@ -16,7 +16,7 @@ from algorithm_config import retrieve_configurations
 import binpickle
 import time
 
-from run_utils import ndcg, hr, recall, rmse, mae
+from run_utils import ndcg, hr, recall
 
 
 def lenskit_load_transform(data_set_name, fold, partition):
@@ -201,47 +201,33 @@ def lenskit_evaluate(mode, data_set_name, algorithm_name, algorithm_config, fold
         "fold": fold
     }
 
-    if "rating" not in test.columns:
 
-        with open(f"./data_sets/{data_set_name}/checkpoint_{algorithm_name}/"
-                  f"config_{algorithm_config}/fold_{fold}/predictions.json", "r") as file:
-            top_k_dict = json.load(file)
+    with open(f"./data_sets/{data_set_name}/checkpoint_{algorithm_name}/"
+              f"config_{algorithm_config}/fold_{fold}/predictions.json", "r") as file:
+        top_k_dict = json.load(file)
 
-        top_k_dict = {int(k): v[0] for k, v in top_k_dict.items()}
-        k_options = [1, 3, 5, 10, 20]
+    top_k_dict = {int(k): v[0] for k, v in top_k_dict.items()}
+    k_options = [1, 3, 5, 10, 20]
 
-        start_evaluation = time.time()
-        ndcg_per_user_per_k = ndcg(top_k_dict, k_options, test, "user", "item")
-        hr_per_user_per_k = hr(top_k_dict, k_options, test, "user", "item")
-        recall_per_user_per_k = recall(top_k_dict, k_options, test, "user", "item")
-        end_evaluation = time.time()
+    start_evaluation = time.time()
+    ndcg_per_user_per_k = ndcg(top_k_dict, k_options, test, "user", "item")
+    hr_per_user_per_k = hr(top_k_dict, k_options, test, "user", "item")
+    recall_per_user_per_k = recall(top_k_dict, k_options, test, "user", "item")
+    end_evaluation = time.time()
 
-        evaluate_log_dict["evaluation_time"] = end_evaluation - start_evaluation
+    evaluate_log_dict["evaluation_time"] = end_evaluation - start_evaluation
 
-        for k in k_options:
-            score = sum(ndcg_per_user_per_k[k]) / len(ndcg_per_user_per_k[k])
-            print(f"NDCG@{k}: {score}")
-            evaluate_log_dict[f"NDCG@{k}"] = score
-            score = sum(hr_per_user_per_k[k]) / len(hr_per_user_per_k[k])
-            print(f"HR@{k}: {score}")
-            evaluate_log_dict[f"HR@{k}"] = score
-            score = sum(recall_per_user_per_k[k]) / len(recall_per_user_per_k[k])
-            print(f"Recall@{k}: {score}")
-            evaluate_log_dict[f"Recall@{k}"] = score
-    else:
-        predictions = pd.read_csv(f"./data_sets/{data_set_name}/checkpoint_{algorithm_name}/"
-                                  f"config_{algorithm_config}/fold_{fold}/predictions.csv")
+    for k in k_options:
+        score = sum(ndcg_per_user_per_k[k]) / len(ndcg_per_user_per_k[k])
+        print(f"NDCG@{k}: {score}")
+        evaluate_log_dict[f"NDCG@{k}"] = score
+        score = sum(hr_per_user_per_k[k]) / len(hr_per_user_per_k[k])
+        print(f"HR@{k}: {score}")
+        evaluate_log_dict[f"HR@{k}"] = score
+        score = sum(recall_per_user_per_k[k]) / len(recall_per_user_per_k[k])
+        print(f"Recall@{k}: {score}")
+        evaluate_log_dict[f"Recall@{k}"] = score
 
-        start_evaluation = time.time()
-        rmse_score = rmse(predictions["prediction"], test["rating"])
-        mae_score = mae(predictions["prediction"], test["rating"])
-        end_evaluation = time.time()
-
-        evaluate_log_dict["evaluation_time"] = end_evaluation - start_evaluation
-        print(f"RMSE: {rmse_score}")
-        evaluate_log_dict["RMSE"] = rmse_score
-        print(f"MAE: {mae_score}")
-        evaluate_log_dict["MAE"] = mae_score
 
     with open(f"./data_sets/{data_set_name}/checkpoint_{algorithm_name}/"
               f"config_{algorithm_config}/fold_{fold}/evaluate_log.json", 'w') as file:

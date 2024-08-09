@@ -2,8 +2,6 @@ import argparse
 
 from available_algorithms import recbole_algorithm_names, lenskit_algorithm_names, recpack_algorithm_names
 
-from run_utils import measure_and_log_function_time
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser("Execution Master")
     parser.add_argument('--mode', dest='mode', type=str, required=True)
@@ -17,45 +15,45 @@ if __name__ == "__main__":
         if args.mode == "fit":
             from run_recbole import recbole_fit
 
-            measure_and_log_function_time(recbole_fit, **vars(args))
+            recbole_fit(**vars(args))
         elif args.mode == "predict":
             from run_recbole import recbole_predict
 
-            measure_and_log_function_time(recbole_predict, **vars(args))
+            recbole_predict(**vars(args))
         elif args.mode == "evaluate":
             from run_recbole import recbole_evaluate
 
-            measure_and_log_function_time(recbole_evaluate, **vars(args))
+            recbole_evaluate(**vars(args))
         else:
             print(f"Mode {args.mode} not found.")
     elif args.algorithm_name in lenskit_algorithm_names:
         if args.mode == "fit":
             from run_lenskit import lenskit_fit
 
-            measure_and_log_function_time(lenskit_fit, **vars(args))
+            lenskit_fit(**vars(args))
         elif args.mode == "predict":
             from run_lenskit import lenskit_predict
 
-            measure_and_log_function_time(lenskit_predict, **vars(args))
+            lenskit_predict(**vars(args))
         elif args.mode == "evaluate":
             from run_lenskit import lenskit_evaluate
 
-            measure_and_log_function_time(lenskit_evaluate, **vars(args))
+            lenskit_evaluate(**vars(args))
         else:
             print(f"Mode {args.mode} not found.")
     elif args.algorithm_name in recpack_algorithm_names:
         if args.mode == "fit":
             from run_recpack import recpack_fit
 
-            measure_and_log_function_time(recpack_fit, **vars(args))
+            recpack_fit(**vars(args))
         elif args.mode == "predict":
             from run_recpack import recpack_predict
 
-            measure_and_log_function_time(recpack_predict, **vars(args))
+            recpack_predict(**vars(args))
         elif args.mode == "evaluate":
             from run_recpack import recpack_evaluate
 
-            measure_and_log_function_time(recpack_evaluate, **vars(args))
+            recpack_evaluate(**vars(args))
         else:
             print(f"Mode {args.mode} not found.")
     else:

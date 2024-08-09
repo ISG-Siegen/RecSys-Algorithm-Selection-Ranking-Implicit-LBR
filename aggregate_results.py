@@ -27,13 +27,13 @@ def write_results():
                                     predict_log_file = fold_folder / "predict_log.json"
                                     evaluate_log_file = fold_folder / "evaluate_log.json"
 
-                                    def log_exists(log_file, type):
+                                    def log_exists(log_file, type_file):
                                         if log_file.exists():
-                                            print(f"{type} log exists for {data_set_name} {model_name} "
+                                            print(f"{type_file} log exists for {data_set_name} {model_name} "
                                                   f"{config_index} {fold_index}")
                                             return True
                                         else:
-                                            print(f"{type} log missing for {data_set_name} {model_name} "
+                                            print(f"{type_file} log missing for {data_set_name} {model_name} "
                                                   f"{config_index} {fold_index}")
                                             return False
 

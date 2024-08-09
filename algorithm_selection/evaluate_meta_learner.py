@@ -5,7 +5,7 @@ data = pd.read_csv("results_agg.csv")
 
 for meta_leaner in ["autogluon", "random_forest", "autogluon_best", "linear_regression", "autogluon_best_opt",
                     "k_nearest_neighbors", "xgboost"]:
-    for metric in ["NDCG@1", "NDCG@10", "HR@10"]:
+    for metric in ["NDCG@10"]:
         for objective in ["ranking", "regression"]:
             objective_meta_leaner = data.loc[
                 (data["metric"] == metric) & (data["objective"] == objective) & (data["model"] == meta_leaner)].copy()

@@ -1,7 +1,5 @@
 # Recommender Systems Algorithm Selection for Ranking Prediction on Implicit Feedback Datasets
 
----
-
 ## List of datasets used in the paper
 
 Contains extracted meta-features and source links for the datasets.
@@ -112,8 +110,6 @@ Contains the library that the algorithm implementation originates from.
 | 22 | SVD            | RecPack |
 | 23 | UserUser       | LensKit |
 
----
-
 ## Reproducibility Instructions
 
 ### Meta-Dataset Acquisition
@@ -126,11 +122,35 @@ only the algorithm selection results.
 
 1. Download the source file from the link in the dataset table and place it in
    the `data_sets/<data_set_name>/source/files/` directory and remove the placeholder file in that directory.
-2. Run `hpc_convert_raw_to_processed.py` to convert the raw data to the processed data.
-3. Run `hpc_convert_processed_to_atomic.py` to convert the processed data to atomic data.
-4. Run `hpc_execute.py --mode fit` to train all algorithms on all datasets.
-5. Run `hpc_execute.py --mode predict` to create predictions with all algorithms on all datasets.
-6. Run `hpc_execute.py --mode evaluate` to evaluate the predictions of all algorithms on all datasets.
+2. Convert the raw data to the processed data.
+    1. To run on HPC: run `hpc_convert_raw_to_processed.py`.
+    2. To run locally: run `convert_raw_to_processed.py --data_set_name <data_set_name>` for each `data_set_name`
+       in `hpc_data_set_names.data_set_names`.
+3. Convert the processed data to the atomic data.
+    1. To run on HPC: run `hpc_convert_processed_to_atomic.py`.
+    2. To run locally: run `convert_processed_to_atomic.py --data_set_name <data_set_name>` for each `data_set_name`
+       in `hpc_data_set_names.data_set_names`.
+4. Train all algorithms on all datasets.
+    1. To run on HPC: run `hpc_execute.py --mode fit`.
+    2. To run locally:
+       run `execution_master.py --mode fit --data_set_name <data_set_name> --algorithm_name <algorithm_name> --algorithm_config <algorithm_config> --fold <fold>`
+       for each `data_set_name` in `hpc_data_set_names.data_set_names` for each `algorithm_name`
+       in `hpc_data_set_names.algorithm_names` for each `algorithm_config` retrieved by
+       calling `algorithm_config.retrieve_configurations(algorithm_name)` for each `fold` in `[0,1,2,3,4]`.
+5. Create predictions with all algorithms on all datasets.
+    1. To run on HPC: run `hpc_execute.py --mode predict`.
+    2. To run locally:
+       run `execution_master.py --mode predict --data_set_name <data_set_name> --algorithm_name <algorithm_name> --algorithm_config <algorithm_config> --fold <fold>`
+       for each `data_set_name` in `hpc_data_set_names.data_set_names` for each `algorithm_name`
+       in `hpc_data_set_names.algorithm_names` for each `algorithm_config` retrieved by
+       calling `algorithm_config.retrieve_configurations(algorithm_name)` for each `fold` in `[0,1,2,3,4]`.
+6. Evaluate the predictions of all algorithms on all datasets.
+    1. To run on HPC: run `hpc_execute.py --mode evaluate`.
+    2. To run locally:
+       run `execution_master.py --mode evaluate --data_set_name <data_set_name> --algorithm_name <algorithm_name> --algorithm_config <algorithm_config> --fold <fold>`
+       for each `data_set_name` in `hpc_data_set_names.data_set_names` for each `algorithm_name`
+       in `hpc_data_set_names.algorithm_names` for each `algorithm_config` retrieved by
+       calling `algorithm_config.retrieve_configurations(algorithm_name)` for each `fold` in `[0,1,2,3,4]`.
 7. Run `aggregate_results.py` to aggregate the results of the evaluations of all algorithms on all datasets.
 8. Run `create_meta_dataset.py` to create the meta-dataset from the aggregated results.
 
@@ -142,7 +162,14 @@ An HPC cluster is recommended for this task as this requires a significant amoun
 
 1. Make sure that the meta-dataset for the desired target metric is in the `algorithm_selection/` directory, e.g., the
    file `metaset_NDCG@10.csv`.
-2. Run `algorithm_selection/hpc_mtl.py` to train and evaluate the meta-learning algorithms on the meta-dataset.
+2. Train and evaluate the meta-learning algorthms on the meta-dataset.
+    1. To run on HPC: run `algorithm_selection/hpc_mtl.py`
+    2. To run locally:
+       run `process_evaluation.py --metric NDCG@10 --split loo --eval_id <eval_id> --objective <objective> --multi_labels 0 --algo_id <algo_id> --model <model>`
+       for each `eval_id` in `range(72)` for each `objective` in `["regression", "ranking"]` for each `algo_id`
+       in `range(46)` for each model
+       in `["linear_regression", "k_nearest_neighbors", "xgboost", "random_forest", "autogluon", "autogluon_best",
+       "autogluon_best_opt"]`.
 3. Run `algorithm_selection/aggregate_results.py` to aggregate the results of the evaluations of the meta-learning
    algorithms on the meta-dataset.
 4. Run `algorithm_selection/evaluate_meta_learning.py` to evaluate the meta-learning algorithms.
@@ -150,9 +177,11 @@ An HPC cluster is recommended for this task as this requires a significant amoun
 
 ## Meta-Dataset for NDCG@10
 
-This is what the meta-dataset looks like for the NDCG@10 metric.
+This is the meta-dataset for the NDCG@10 metric.
 The first twelve columns contain the meta-features and the remaining columns contain the algorithm performances in
 NDCG@10.
+The integer in the name of each algorithm is the ID of the hyperparameter configuration of that algorithm.
+Refer to `algorithm_config.py` for the hyperparameters.
 The content of this file is stored in `algorithm_selection/metaset_NDCG@10`.
 The meta-datasets for other metrics are also stored there.
 

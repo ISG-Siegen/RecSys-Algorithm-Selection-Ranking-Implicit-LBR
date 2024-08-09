@@ -1,8 +1,3 @@
-import json
-import time
-from pathlib import Path
-from sklearn.metrics import mean_squared_error, mean_absolute_error
-
 import numpy as np
 
 
@@ -49,24 +44,3 @@ def recall(top_k_dict, k_options, test, user_column, item_column):
             user_recall = hits[:k].sum() / min(len(positive_test_interactions), k)
             recall_per_user_per_k[k].append(user_recall)
     return recall_per_user_per_k
-
-
-def rmse(predictions, test):
-    return mean_squared_error(test, predictions, squared=False)
-
-
-def mae(predictions, test):
-    return mean_absolute_error(test, predictions)
-
-
-def measure_and_log_function_time(func, **kwargs):
-    time_before = time.time()
-    result = func(**kwargs)
-    time_after = time.time()
-
-    Path(f"./energy").mkdir(parents=True, exist_ok=True)
-    with open(f"./energy/{kwargs['data_set_name']}_{kwargs['algorithm_name']}_"
-              f"{kwargs['algorithm_config']}_{kwargs['fold']}_{kwargs['mode']}.json", "w") as file:
-        json.dump({"start": time_before, "end": time_after}, file, indent=4)
-
-    return result

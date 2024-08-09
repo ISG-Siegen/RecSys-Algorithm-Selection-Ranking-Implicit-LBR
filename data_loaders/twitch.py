@@ -8,6 +8,7 @@ class Twitch(Loader):
     @staticmethod
     def load_from_file(source_path, user_column_name, item_column_name, rating_column_name, timestamp_column_name,
                        **additional_parameters):
+        data = None
         if additional_parameters["version"] == "100k_a":
             data = pd.read_csv(f"{source_path}/{additional_parameters['version']}.csv", sep=",", header=None,
                                usecols=[0, 1, 3, 4],
