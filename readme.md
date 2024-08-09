@@ -112,13 +112,22 @@ Contains the library that the algorithm implementation originates from.
 
 ## Reproducibility Instructions
 
+### Installing requirements
+
+This project was tested with Python 3.10 on Windows and Linux.  
+There are three options to install the requirements.
+
+1. Build a Docker container with the provided `Dockerfile`.
+2. Build a Singularity container with the provided definition file `mtl.def`.
+3. Install the requirements to your local Python environment with `pip install -r requirements.txt`.
+
 ### Meta-Dataset Acquisition
 
-To reproduce the acquisition of the meta-dataset, follow the instructions below.
-This includes downloading, pre-processing, training, and evaluating all algorithms on all datasets.
-An HPC cluster is recommended for this task as this requires a significant amount of computational resources.
+To reproduce the acquisition of the meta-dataset, follow the instructions below.  
+This includes downloading, pre-processing, training, and evaluating all algorithms on all datasets.  
+An HPC cluster is recommended for this task as this requires a significant amount of computational resources.  
 For convenience, the meta-dataset is already included in the repository, so these steps are not necessary to reproduce
-only the algorithm selection results.
+only the algorithm selection results.  
 
 1. Download the source file from the link in the dataset table and place it in
    the `data_sets/<data_set_name>/source/files/` directory and remove the placeholder file in that directory.
@@ -157,8 +166,8 @@ only the algorithm selection results.
 ### Algorithm Selection
 
 These steps involve training and evaluating the meta-learning algorithms on the meta-dataset to select the
-best-performing algorithms.
-An HPC cluster is recommended for this task as this requires a significant amount of computational resources.
+best-performing algorithms.  
+An HPC cluster is recommended for this task as this requires a significant amount of computational resources.  
 
 1. Make sure that the meta-dataset for the desired target metric is in the `algorithm_selection/` directory, e.g., the
    file `metaset_NDCG@10.csv`.
@@ -177,13 +186,13 @@ An HPC cluster is recommended for this task as this requires a significant amoun
 
 ## Meta-Dataset for NDCG@10
 
-This is the meta-dataset for the NDCG@10 metric.
+This is the meta-dataset for the NDCG@10 metric.  
 The first twelve columns contain the meta-features and the remaining columns contain the algorithm performances in
-NDCG@10.
-The integer in the name of each algorithm is the ID of the hyperparameter configuration of that algorithm.
-Refer to `algorithm_config.py` for the hyperparameters.
-The content of this file is stored in `algorithm_selection/metaset_NDCG@10`.
-The meta-datasets for other metrics are also stored there.
+NDCG@10.  
+The integer in the name of each algorithm is the ID of the hyperparameter configuration of that algorithm.  
+Refer to `algorithm_config.py` for the hyperparameters.  
+The content of this file is stored in `algorithm_selection/metaset_NDCG@10`.  
+The meta-datasets for other metrics are also stored there.  
 
 |    | num_users | num_items | num_interactions |   density | user_item_ratio | item_user_ratio | highest_num_rating_by_single_user | lowest_num_rating_by_single_user | highest_num_rating_on_single_item | lowest_num_rating_on_single_item | mean_num_ratings_by_user | mean_num_ratings_on_item |      BPR_0 |      BPR_1 |     CDAE_0 |     CDAE_1 |       DMF_0 |      DMF_1 |     EASE_0 |     EASE_1 |     ENMF_0 |     ENMF_1 | ImplicitMF_0 | ImplicitMF_1 | ItemItem_0 | ItemItem_1 | ItemKNNRP_0 | ItemKNNRP_1 |  ItemKNN_0 |  ItemKNN_1 |      LINE_0 |     LINE_1 | LightGCN_0 | LightGCN_1 | MacridVAE_0 | MacridVAE_1 | MultiDAE_0 | MultiDAE_1 | MultiVAE_0 | MultiVAE_1 | NCEPLRec_0 | NCEPLRec_1 |      NMF_0 |      NMF_1 |    NeuMF_0 |    NeuMF_1 | PopScore_0 | PopScore_1 |      Pop_0 |    Random_0 |   RecVAE_0 |   RecVAE_1 |      SVD_0 |      SVD_1 |  SimpleX_0 |  SimpleX_1 | UserUser_0 | UserUser_1 |
 |---:|----------:|----------:|-----------------:|----------:|----------------:|----------------:|----------------------------------:|---------------------------------:|----------------------------------:|---------------------------------:|-------------------------:|-------------------------:|-----------:|-----------:|-----------:|-----------:|------------:|-----------:|-----------:|-----------:|-----------:|-----------:|-------------:|-------------:|-----------:|-----------:|------------:|------------:|-----------:|-----------:|------------:|-----------:|-----------:|-----------:|------------:|------------:|-----------:|-----------:|-----------:|-----------:|-----------:|-----------:|-----------:|-----------:|-----------:|-----------:|-----------:|-----------:|-----------:|------------:|-----------:|-----------:|-----------:|-----------:|-----------:|-----------:|-----------:|-----------:|
